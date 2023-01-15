@@ -37,6 +37,7 @@ if __name__ == '__main__':
     print(
         f"Dérivées : {[((func2(x_vals[x + 1]) - func2(x_vals[x])) / (x_vals[x + 1] - x_vals[x]), x_vals[x]) for x in range(0, 999)]}")
 
+
     plt.plot(x_vals, exp_f_vals)
     plt.plot(
         x_vals[:-1],
