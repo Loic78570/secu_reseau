@@ -1,7 +1,7 @@
 from scapy.all import *
 from scapy.layers.inet import IP, TCP
 
-from aux_function import pkt_to_json
+from aux_functions.aux_function import pkt_to_json
 
 count = 0
 server_host = '192.168.1.70'
