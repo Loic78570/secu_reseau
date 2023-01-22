@@ -5,7 +5,7 @@ from aux_functions.aux_function import pkt_to_json
 
 count = 0
 server_host = '192.168.1.70'
-server_port = 23  # Your victim's server's port
+server_port = 23
 victim_host = '192.168.1.67'
 victim_port = None
 
@@ -21,7 +21,7 @@ prev_client_load = None
 def packet_listen_callback(pkt):
     global count, server_host, server_port, victim_host, victim_port, prev_client_load
     count += 1
-    print("---------------- " + str(count) + " ------------------")
+    print("---------------- {0} ------------------".format(str(count)))
     real_packet = pkt_to_json(pkt.show(dump=True))
     print('seq: ' + real_packet['tcp']['seq'])
     print('ack: ' + real_packet['tcp']['ack'])
@@ -65,4 +65,5 @@ def packet_listen_callback(pkt):
 
 sniff(filter="tcp and host " + server_host + " and tcp port " + str(server_port), prn=packet_listen_callback)
 
-# Article at https://zya.page.link/tcpjack
+# Code pris sur https://zya.page.link/tcpjack
+# Program forked from https://gist.github.com/ZY-Ang/7af2454c75b48b2bd189c13544b5e27d

